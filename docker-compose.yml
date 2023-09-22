@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  database:
+    image: postgres:14.0-alpine
+    restart: always
+    cap_add:
+      - SYS_NICE
+    environment:
+      PGDATA: /data/postgres
+      POSTGRES_USER: roplanet
+      POSTGRES_DB: roplanetdb
+      POSTGRES_PASSWORD: "goodbdaka"
+    volumes:
+      - "./data:/data/postgres"
+      - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+    ports:
+      - 5432:5432
+    networks:
+      - ship
+  web:
+    build:
+      context: ""
+      dockerfile: dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    networks:
+      - ship
+  redis:
+    image: "redis:alpine"
+    networks:
+      - ship
+
+
+networks:
+  ship:
+    name: ship_network
+
