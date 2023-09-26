@@ -7,8 +7,7 @@ from database import db, Product
 
 class ProductGet(Resource):
     def get(self):
-        data = request.get_json()
-        category_id = data.get('categoryId')
+        category_id = request.args.get('categoryId')
         query = Product.query.filter_by(category_id=category_id)
         products_data = [product.as_dict() for product in query]
         return jsonify(products_data)
