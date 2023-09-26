@@ -19,10 +19,12 @@ class CreateReview(Resource):
 
 class ReviewGetList(Resource):
     def get(self):
-        data = request.get_json()
-        query = Review.query.all()
-        products_data = [product.as_dict() for product in query]
-        return jsonify(products_data)
+        count = request.args.get('count', default=100000,
+                                 type=int)  #
+        query = Review.query.limit(count).all()
+        reviews_data = [review.as_dict() for review in query]
+        return jsonify(reviews_data)
+
 
 class ReviewIdMod(Resource):
     def put(self, id):
