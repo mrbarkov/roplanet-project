@@ -23,7 +23,7 @@ services:
       context: ""
       dockerfile: dockerfile
     ports:
-      - "5000:5000"
+      - "8000:5000"
     depends_on:
       - database
     networks:

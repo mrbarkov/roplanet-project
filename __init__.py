@@ -2,11 +2,11 @@ from flask import Flask
 from flask_restful import Api
 
 from database import db
-
+import psycopg2
 
 app = Flask(__name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'xls', 'xlsx'}
-DATABASE_CONNECTION = 'sqlite:///categories.db'
+DATABASE_CONNECTION = 'postgresql://roplanet:goodbdaka@database/roplanetdb'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
