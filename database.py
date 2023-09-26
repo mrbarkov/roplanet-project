@@ -84,4 +84,30 @@ class Review(db.Model):
         }
 
 
+from sqlalchemy import Column, Integer, String, Boolean
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(255), nullable=True)
+    last_name = Column(String(255))
+    role = Column(Boolean)
+    phone = Column(String(20))
+    email = Column(String(255))
+    sms_code = Column(String(6))
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'firstName': self.first_name,
+            'lastName': self.last_name,
+            'role': self.role,
+            'phone': self.phone,
+            'email': self.email,
+        }
+
+
+
+
 
