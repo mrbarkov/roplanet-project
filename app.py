@@ -4,7 +4,7 @@ import flask
 from flask import request, session, send_file, jsonify
 from flask import request
 from flask_restful import Resource
-from user.User import UserRegistration, UserSmsConfirm, UserLogin, RefreshToken
+from user.User import UserRegistration, UserSmsConfirm, UserLogin, RefreshToken, UserGetInfo
 from __init__ import allowed_file
 from categories.categories import CategoriesResource, CategoryResource
 from Products.product import ProductGet, GetProductById, ProductCreate, ProductChange
@@ -42,7 +42,7 @@ class ImageUpload(Resource):
 
 
 
-
+api.add_resource(UserGetInfo, "/api/user/me")
 api.add_resource(UserRegistration, "/api/user/registration")
 api.add_resource(UserLogin, "/api/user/login")
 api.add_resource(RefreshToken, "/token/refresh")

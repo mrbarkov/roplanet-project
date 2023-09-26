@@ -10,6 +10,12 @@ from flask_restful import Resource
 from database import db, Product, User
 
 
+class UserGetInfo(Resource):
+    @jwt_required()
+    def get(self):
+        get_user = User.query.filter_by(email=get_jwt_identity()).first()
+        return jsonify(get_user.as_dict())
+
 class UserRegistration(Resource):
     def post(self):
         data = request.get_json()
@@ -20,12 +26,8 @@ class UserRegistration(Resource):
         )
         db.session.add(user_create)
         db.session.commit()
-        user_create.sms_code = "748465"
+        user_create.sms_code = ''.join(random.choices(string.digits, k=6))
         db.session.commit()
-        # access_token = create_access_token(identity=data['email'])
-        # refresh_token = create_refresh_token(identity=data['email'])
-        # print(access_token, refresh_token)
-        # print(user_create.sms_code)
         send_confirmation_email(data["email"], user_create.sms_code)
         return
 

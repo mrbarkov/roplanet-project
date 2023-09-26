@@ -92,6 +92,7 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     first_name = Column(String(255), nullable=True)
     last_name = Column(String(255))
+    parentName = Column(String(255))
     role = Column(Boolean)
     phone = Column(String(20))
     email = Column(String(255))
@@ -102,6 +103,7 @@ class User(db.Model):
             'id': self.id,
             'firstName': self.first_name,
             'lastName': self.last_name,
+            'parentname': self.parentName,
             'role': self.role,
             'phone': self.phone,
             'email': self.email,
