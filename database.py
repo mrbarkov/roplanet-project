@@ -1,8 +1,8 @@
 import json
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 db = SQLAlchemy()
-
 
 class Categories(db.Model):
     __tablename__ = 'Categories'
@@ -96,7 +96,7 @@ class User(db.Model):
     role = Column(Boolean)
     phone = Column(String(20))
     email = Column(String(255))
-    sms_code = Column(String(6))
+    sms_code = Column(String(100))
 
     def as_dict(self):
         return {
@@ -109,7 +109,42 @@ class User(db.Model):
             'email': self.email,
         }
 
+class Order(db.Model):
+    orderID = db.Column(db.String(50), primary_key=True)
+    orderNumber = db.Column(db.String(50), nullable=True)
+    orderDate = db.Column(db.String(50), nullable=True)
+    city = db.Column(db.String(255), nullable=True)
+    phoneNumber = db.Column(db.String(20), nullable=True)
+    email = db.Column(db.String(255), nullable=True)
+    street = db.Column(db.String(255), nullable=True)
+    house = db.Column(db.String(10), nullable=True)
+    apartments = db.Column(db.String(10))
+    entrance = db.Column(db.String(10))
+    floor = db.Column(db.String(10))
+    commentary = db.Column(db.Text)
+    status = db.Column(db.String(50), nullable=True)
+    deliveryService = db.Column(db.String(50), nullable=True)
+    deliveryTrack = db.Column(db.String(50))
+    deliveryAmount = db.Column(db.Float)
+    totalAmount = db.Column(db.Float, nullable=True)
 
+class OrderProduct(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    orderID = db.Column(db.String(50), db.ForeignKey('order.orderID'), nullable=True)
+    productId = db.Column(db.String(50), nullable=True)
+    productSizes = db.Column(db.String(50), nullable=True)
+    productColor = db.Column(db.String(50), nullable=True)
+    count = db.Column(db.Integer, nullable=True)
 
+# # Выполните создание таблицы с помощью db.create_all() в вашем приложении Flask.
+# class ProductSchema(ma.SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = Product
+#
+# class OrderSchema(ma.SQLAlchemyAutoSchema):
+#     products = ma.Nested(ProductSchema, many=True)
+#
+#
+#
 
 

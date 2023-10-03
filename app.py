@@ -5,6 +5,7 @@ from flask import request, session, send_file, jsonify
 from flask import request
 from flask_restful import Resource
 from user.User import UserRegistration, UserSmsConfirm, UserLogin, RefreshToken, UserGetInfo
+from orders.order import OrderCreate, OrderChange, OrderGetInfo, OrderCancel
 from __init__ import allowed_file
 from categories.categories import CategoriesResource, CategoryResource
 from Products.product import ProductGet, GetProductById, ProductCreate, ProductChange
@@ -41,12 +42,17 @@ class ImageUpload(Resource):
             return filename
 
 
+api.add_resource(OrderChange, "/api/order/<int:order_id>")
+api.add_resource(OrderCancel, "/api/order/cancel/<int:order_id>")
+api.add_resource(OrderGetInfo, "/api/order/<int:order_id>")
+api.add_resource(OrderCreate, "/api/order/create")
 
 api.add_resource(UserGetInfo, "/api/user/me")
 api.add_resource(UserRegistration, "/api/user/registration")
 api.add_resource(UserLogin, "/api/user/login")
 api.add_resource(RefreshToken, "/token/refresh")
 api.add_resource(UserSmsConfirm, "/api/user/code")
+
 api.add_resource(ImageUpload, "/api/image/load")
 api.add_resource(ImageGet, "/api/image/<string:filename>")
 
@@ -63,4 +69,4 @@ api.add_resource(CreateReview, "/api/review")
 api.add_resource(ReviewIdMod, "/api/review/<int:id>")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=8888, debug=True)
