@@ -1,17 +1,16 @@
 import os
 from datetime import datetime
-import flask
-from flask import request, session, send_file, jsonify
-from flask import request
+
+from flask import request, send_file
 from flask_restful import Resource
+
 from user.User import UserRegistration, UserSmsConfirm, UserLogin, RefreshToken, UserGetInfo
-from orders.order import OrderCreate, OrderChange, OrderGetInfo, OrderCancel
-from __init__ import allowed_file
+from orders.order import OrderCreate, OrderChange, OrderGetInfo, OrderCancel, OrderGetList
 from categories.categories import CategoriesResource, CategoryResource
 from Products.product import ProductGet, GetProductById, ProductCreate, ProductChange
-from reviews.reviews import ReviewIdMod, Review, CreateReview, ReviewGetList
+from reviews.reviews import ReviewIdMod, CreateReview, ReviewGetList
 from database import db
-from __init__ import app, api
+from __init__ import app, api, allowed_file
 
 
 @app.before_request
@@ -25,8 +24,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 class ImageGet(Resource):
-    """Class get image on server"""
-
     def get(self, filename):
         """Request from get image"""
         path = f'uploads/{filename}'
@@ -42,6 +39,7 @@ class ImageUpload(Resource):
             return filename
 
 
+api.add_resource(OrderGetList, "/api/order/list")
 api.add_resource(OrderChange, "/api/order/<int:order_id>")
 api.add_resource(OrderCancel, "/api/order/cancel/<int:order_id>")
 api.add_resource(OrderGetInfo, "/api/order/<int:order_id>")

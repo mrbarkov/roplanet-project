@@ -1,13 +1,11 @@
-import json
-import string
-from random import random
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, create_refresh_token, get_jwt_identity
+import random
+from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import request, jsonify
 from flask_restful import Resource
-from database import db, Product, User
+from database import db, User
 
 
 class UserGetInfo(Resource):
@@ -26,7 +24,7 @@ class UserRegistration(Resource):
         )
         db.session.add(user_create)
         db.session.commit()
-        user_create.sms_code = ''.join(random.choices(string.digits, k=6))
+        user_create.sms_code = str(random.randint(100000, 999999))
         db.session.commit()
         send_confirmation_email(data["email"], user_create.sms_code)
         return
@@ -51,10 +49,13 @@ class UserLogin(Resource):
     def post(self):
         data = request.get_json()
         user_get = User.query.filter_by(email=data["email"]).first()
-        user_get.sms_code = ''.join(random.choices(string.digits, k=6))
+        if user_get is not True:
+            return "User not found", 401
+        user_get.sms_code = str(random.randint(100000, 999999))
         db.session.commit()
         if user_get:
-            send_confirmation_email(data["email"], user_get.sms_code)
+            send_confirmation_email(data["email"], code=str(user_get.sms_code))
+            return "Good xuiny", 200
         return "j", 401
 
 
@@ -71,8 +72,8 @@ def send_confirmation_email(email, code):
     smtp_port = 587
 
     # Ваш адрес электронной почты и пароль
-    email_address = "Fleptn@yandex.ru"
-    email_password = ""
+    email_address = "iambitkov@yandex.ru"
+    email_password = "kdkewoxsfhxmvlsr"
     to_email = email
     msg = MIMEMultipart()
     msg['From'] = email_address

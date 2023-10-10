@@ -1,17 +1,11 @@
-import json
-import string
 import random
 from datetime import datetime
-
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, create_refresh_token, get_jwt_identity
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from flask import request, jsonify
 from flask_restful import Resource
-from database import db, User, Order, OrderProduct, Product
-from flask_marshmallow import Marshmallow
-from __init__ import ma
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from database import db, Order, OrderProduct, Product
+
+
 class OrderChange(Resource):
     def put(self, order_id):
         order_data = request.get_json()
@@ -94,7 +88,6 @@ class OrderCreate(Resource):
         return {'message': 'Заказ успешно создан', 'order_id': new_order.orderID}, 201
 
 
-
 class OrderGetInfo(Resource):
     def get(self, order_id):
         order = Order.query.filter_by(orderID=order_id).first()
@@ -144,3 +137,47 @@ class OrderCancel(Resource):
         order.status = "Отменен"
         db.session.commit()
         return "Заказ отменен", 200
+
+
+class OrderGetList(Resource):
+    @jwt_required()
+    def get(self):
+        orders = Order.query.filter_by(email=get_jwt_identity()).all()
+
+        result = []
+        for order in orders:
+            order_info = {
+                'orderID': order.orderID,
+                'orderNumber': order.orderNumber,
+                'orderDate': order.orderDate,
+                'city': order.city,
+                'phoneNumber': order.phoneNumber,
+                'email': order.email,
+                'street': order.street,
+                'house': order.house,
+                'apartments': order.apartments,
+                'entrance': order.entrance,
+                'floor': order.floor,
+                'commentary': order.commentary,
+                'status': order.status,
+                'deliveryService': order.deliveryService,
+                'deliveryTrack': order.deliveryTrack,
+                'deliveryAmount': order.deliveryAmount,
+                'totalAmount': order.totalAmount,
+            }
+
+            products = OrderProduct.query.filter_by(orderID=order.orderID).all()
+            product_list = []
+            for product in products:
+                product_info = {
+                    'productId': product.productId,
+                    'productSizes': product.productSizes,
+                    'productColor': product.productColor,
+                    'count': product.count,
+                }
+                product_list.append(product_info)
+            order_info['products'] = product_list
+
+            result.append(order_info)
+
+        return jsonify(result)

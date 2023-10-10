@@ -1,5 +1,3 @@
-import json
-
 from flask import request, jsonify
 from flask_restful import Resource
 from database import db, Review
@@ -16,6 +14,7 @@ class CreateReview(Resource):
         db.session.add(review_obj)
         db.session.commit()
         jsonify(review_obj.as_dict())
+
 
 class ReviewGetList(Resource):
     def get(self):

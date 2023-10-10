@@ -2,6 +2,7 @@ import json
 
 from flask import request, jsonify
 from flask_restful import Resource
+
 from database import db, Product
 
 
@@ -71,7 +72,7 @@ class ProductChange(Resource):
         product.sale_price = data.get('salePrice')
         db.session.commit()
         return jsonify(product.json())
-        return jsonify({"message": "Category updated successfully"})
+        # return jsonify({"message": "Category updated successfully"})
 
     def delete(self, id):
         product = Product.query.get(id)
