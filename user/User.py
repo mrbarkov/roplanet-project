@@ -72,8 +72,8 @@ def send_confirmation_email(email, code):
     smtp_port = 587
 
     # Ваш адрес электронной почты и пароль
-    email_address = "iambitkov@yandex.ru"
-    email_password = "kdkewoxsfhxmvlsr"
+    email_address = ""
+    email_password = ""
     to_email = email
     msg = MIMEMultipart()
     msg['From'] = email_address
